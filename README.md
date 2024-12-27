@@ -34,3 +34,5 @@ Sinta-se à vontade para explorar o conteúdo deste repositório, navegar pelos 
 ### Contribuições 🤝
 
 As contribuições são sempre bem-vindas! Se você encontrar algum erro, tiver sugestões de melhoria ou quiser contribuir com novos conteúdos, sinta-se à vontade para abrir uma *issue* ou enviar um *pull request*.
+
+// teste
