@@ -536,6 +536,263 @@ Se tivermos milhares de produtos, o `Map` se torna significativamente mais efici
 
 ---
 
+### **Problemas Famosos Resolvidos com Map (HashMap, HashTable, TreeMap, etc.)**
+
+---
+
+Os mapas (**Map**) são uma das estruturas de dados mais poderosas e versáteis usadas em algoritmos e desenvolvimento de sistemas. Eles permitem armazenar pares chave-valor, onde a chave é única e associada a um valor. Com sua eficiência em busca, inserção e remoção, **Map** é frequentemente utilizado para resolver problemas complexos que envolvem a associação ou frequência de elementos.
+
+---
+
+### **Principais Casos de Uso e Problemas Famosos Resolvidos com Map**
+
+---
+
+#### **1. Contagem de Frequência de Elementos**
+
+**Problema:**
+Dada uma lista de elementos, conte a frequência de cada elemento.
+
+**Exemplo:**
+Entrada: `[apple, orange, apple, banana, orange, apple]`  
+Saída: `{apple=3, orange=2, banana=1}`
+
+**Uso do `Map`:**
+- Cada elemento será armazenado como uma chave, e o valor associado será sua frequência.
+- O acesso e atualização de valores associados a uma chave têm complexidade **O(1)** em um `HashMap`.
+
+**Solução em Kotlin:**
+```kotlin
+fun contarFrequencia(lista: List<String>): Map<String, Int> {
+    val frequencias = mutableMapOf<String, Int>()
+
+    for (item in lista) {
+        frequencias[item] = frequencias.getOrDefault(item, 0) + 1
+    }
+
+    return frequencias
+}
+
+fun main() {
+    val lista = listOf("apple", "orange", "apple", "banana", "orange", "apple")
+    val resultado = contarFrequencia(lista)
+    println(resultado) // Saída: {apple=3, orange=2, banana=1}
+}
+```
+
+---
+
+#### **2. Problema das Palavras Únicas**
+
+**Problema:**
+Dada uma string, encontre todas as palavras que aparecem apenas uma vez.
+
+**Exemplo:**
+Entrada: `"this is a test this is fun"`  
+Saída: `["a", "test", "fun"]`
+
+**Uso do `Map`:**
+- Use um mapa para rastrear a contagem das palavras.
+- Após construir o mapa, filtre as palavras com valor 1.
+
+**Solução:**
+```kotlin
+fun palavrasUnicas(texto: String): List<String> {
+    val frequencias = mutableMapOf<String, Int>()
+    val palavras = texto.split(" ")
+
+    for (palavra in palavras) {
+        frequencias[palavra] = frequencias.getOrDefault(palavra, 0) + 1
+    }
+
+    return frequencias.filter { it.value == 1 }.keys.toList()
+}
+
+fun main() {
+    val texto = "this is a test this is fun"
+    println(palavrasUnicas(texto)) // Saída: [a, test, fun]
+}
+```
+
+---
+
+#### **3. Encontrar Pares Com Soma Específica**
+
+**Problema:**
+Dado um array de números inteiros, encontre dois números que somem a um valor-alvo.
+
+**Exemplo:**
+Entrada: `nums = [2, 7, 11, 15], alvo = 9`  
+Saída: `[2, 7]` (porque 2 + 7 = 9)
+
+**Uso do `Map`:**
+- O mapa armazena os números visitados (como chave) e o índice ou valor potencial para encontrar o alvo como valor.
+- Isso permite encontrar soluções em **O(n)** usando uma única passagem pelo array.
+
+**Solução:**
+```kotlin
+fun encontrarPares(nums: IntArray, alvo: Int): Pair<Int, Int>? {
+    val map = mutableMapOf<Int, Int>() // Armazena número -> índice
+
+    for ((index, num) in nums.withIndex()) {
+        val complemento = alvo - num
+        if (map.containsKey(complemento)) {
+            return Pair(complemento, num)
+        }
+        map[num] = index
+    }
+
+    return null
+}
+
+fun main() {
+    val nums = intArrayOf(2, 7, 11, 15)
+    val alvo = 9
+    println(encontrarPares(nums, alvo)) // Saída: (2, 7)
+}
+```
+
+---
+
+#### **4. Anagramas Agrupados**
+
+**Problema:**
+Dado um array de strings, agrupe todas as palavras que são anagramas entre si.
+
+**Exemplo:**
+Entrada: `["eat", "tea", "tan", "ate", "nat", "bat"]`  
+Saída: `[["eat", "tea", "ate"], ["tan", "nat"], ["bat"]]`
+
+**Uso do `Map`:**
+- Use um mapa onde as chaves sejam a versão ordenada (ou assinatura única) das letras da palavra.
+- Palavras que compartilham a mesma assinatura são agrupadas.
+
+**Solução:**
+```kotlin
+fun agruparAnagramas(palavras: Array<String>): List<List<String>> {
+    val grupos = mutableMapOf<String, MutableList<String>>()
+
+    for (palavra in palavras) {
+        val chave = palavra.toCharArray().sorted().joinToString("")
+        grupos.getOrPut(chave) { mutableListOf() }.add(palavra)
+    }
+
+    return grupos.values.toList()
+}
+
+fun main() {
+    val palavras = arrayOf("eat", "tea", "tan", "ate", "nat", "bat")
+    println(agruparAnagramas(palavras)) 
+    // Saída: [[eat, tea, ate], [tan, nat], [bat]]
+}
+```
+
+---
+
+#### **5. Encontrar a Substring de Tamanho Fixo com Caracteres Únicos**
+
+**Problema:**
+Dada uma string, encontre a substring de comprimento `k` que tenha todos os caracteres únicos.
+
+**Exemplo:**
+Entrada: `"abcabcbb", k = 3`  
+Saída: `"abc"`
+
+**Uso do `Map`:**
+- O `Map` é usado como uma **janela deslizante** para rastrear os caracteres presentes na substring atual.
+
+**Solução:**
+```kotlin
+fun encontrarSubstringUnica(s: String, k: Int): String? {
+    if (s.length < k) return null
+
+    val mapa = mutableMapOf<Char, Int>()
+    var inicio = 0
+
+    for (fim in s.indices) {
+        val char = s[fim]
+        mapa[char] = mapa.getOrDefault(char, 0) + 1
+
+        if (fim - inicio + 1 == k) {
+            if (mapa.size == k) return s.substring(inicio, fim + 1)
+            
+            val charInicio = s[inicio]
+            if (mapa[charInicio] == 1) {
+                mapa.remove(charInicio)
+            } else {
+                mapa[charInicio] = mapa[charInicio]!! - 1
+            }
+            inicio++
+        }
+    }
+    return null
+}
+
+fun main() {
+    val s = "abcabc"
+    val k = 3
+    println(encontrarSubstringUnica(s, k)) // Saída: "abc"
+}
+```
+
+---
+
+#### **6. Construção de Índice de Busca**
+
+**Problema:**
+Construa um índice invertido que mapeia palavras para as posições onde elas aparecem em um texto.
+
+**Uso do `Map`:**
+- A palavra será a chave do mapa e as ocorrências serão armazenadas como uma lista no valor.
+
+**Exemplo:**
+```kotlin
+fun construirIndice(texto: String): Map<String, List<Int>> {
+    val mapa = mutableMapOf<String, MutableList<Int>>()
+    val palavras = texto.split(" ")
+
+    for ((indice, palavra) in palavras.withIndex()) {
+        mapa.getOrPut(palavra) { mutableListOf() }.add(indice)
+    }
+
+    return mapa
+}
+
+fun main() {
+    val texto = "this is a test this is only a test"
+    println(construirIndice(texto))
+    // Saída: {this=[0, 5], is=[1, 6], a=[2, 8], test=[3, 9], only=[7]}
+}
+```
+
+---
+
+### **Problemas Comuns Resolvidos com Map**
+
+1. **Contagem de Elementos**:
+   - Contagem de frequências em listas, textos ou sequências.
+
+2. **Armazenar Relacionamentos Únicos**:
+   - Exemplo: Mapear nomes de alunos para notas, ou IDs para objetos específicos.
+
+3. **Agrupar Elementos**:
+   - Exemplo: Agrupamento de anagramas, classificação em categorias.
+
+4. **Operações em Cadeias de Texto**:
+   - Rastrear substrings, verificar ocorrências de padrões.
+
+5. **Resolver Problemas Baseados em Lookup**:
+   - Exemplo: `Two-Sum` (encontrar dois números que somam um valor alvo).
+
+6. **Caches Rápidos**:
+   - Sistemas usam mapas como cache para obter valores computados previamente.
+
+### **Vantagens do Map:**
+- As operações de busca, inserção e remoção possuem complexidade **O(1)** no caso de `HashMap`.
+- Extremamente flexível e fácil de usar em problemas baseados em relacionamentos chave-valor.
+
+Com essa versatilidade, mapas são essenciais para resolver problemas de associações, agrupamentos e otimização!
+
 ### **Resumo**
 
 **Recomenda-se usar um `Map` quando:**

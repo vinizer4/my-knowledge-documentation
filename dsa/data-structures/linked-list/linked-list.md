@@ -404,11 +404,228 @@ Além disso, alternativas como **ArrayList** ou arrays fixos não seriam tão ef
 
 ---
 
+### **Problemas Famosos Resolvidos com Linked List**
+
+---
+
+As **Linked Lists** (Listas Ligadas) são estruturas de dados que consistem em nós conectados por ponteiros. Elas são ideais para cenários em que a inserção, exclusão e movimentação frequente de elementos ocorrem. Embora operações como busca e ordenação sejam mais lentas em `Linked Lists` quando comparadas a arrays, elas se destacam por sua flexibilidade e eficiência em manipulações.
+
+Aqui estão alguns **problemas famosos** e **casos de uso reais** onde **Linked Lists** são úteis e frequentemente utilizadas:
+
+---
+
+### Problemas Famosos
+
+#### **1. Implementar Filas (Queue) e Pilhas (Stack)**
+As estruturas **Queue (FIFO)** e **Stack (LIFO)** podem ser implementadas eficientemente utilizando listas ligadas.
+
+**Por que usar Linked List?**
+- Insere e remove elementos do início ou do fim com complexidade **O(1)**.
+- Comparado aos arrays, evita deslocamento de elementos ao adicionar ou remover.
+
+**Problema: Simular uma Fila de Processos**
+Exemplo:
+- Imagine que você precise simular uma fila onde os processos são adicionados ao fim e retirados do início.
+- Linked Lists são ideais devido à sua eficiência no gerenciamento dos extremos.
+
+```kotlin
+import java.util.LinkedList
+fun main() {
+    val queue = LinkedList<Int>() // Fila implementada com LinkedList
+
+    // Inserindo elementos na fila
+    queue.addLast(10) // Enfileira 10
+    queue.addLast(20) // Enfileira 20
+    queue.addLast(30) // Enfileira 30
+
+    println("Fila: $queue") // Saída: Fila: [10, 20, 30]
+
+    // Removendo elementos da fila
+    println("Removido: ${queue.removeFirst()}") // Saída: Removido: 10
+    println("Fila Após Remoção: $queue") // Saída: Fila Após Remoção: [20, 30]
+
+    // Adicionando mais elementos
+    queue.addLast(40)
+    println("Fila após adicionar: $queue") // Saída: Fila após adicionar: [20, 30, 40]
+}
+```
+
+---
+
+#### **2. Palíndromo em Estruturas de Dados**
+**Problema:** Verificar se uma sequência é um palíndromo (lê-se igualmente da esquerda para a direita e da direita para a esquerda).
+**Exemplo:** Verificar se `"radar"` é um palíndromo.
+
+**Por que usar Linked List?**
+- Você pode usar um ponteiro para o começo e outro para o final para comparação de elementos de forma eficiente.
+- Gasto de memória pode ser otimizado quando comparado ao uso de arrays tradicionais em alguns cenários.
+
+---
+
+#### **3. Detectar e Remover Ciclos em uma Lista Ligada**
+Este é um problema clássico usado em entrevistas de programação.
+
+**Problema:** Você tem uma `Linked List` onde os últimos nós podem apontar para um nó anterior formando um ciclo. Seu objetivo é:
+- Detectar se um ciclo existe na lista.
+- Remover o ciclo (torná-la linear novamente).
+
+**Por que Linked List?**
+- A estrutura permite fácil implementação de algoritmos como **Floyd’s Cycle Detection Algorithm (dois ponteiros, rápido e lento)**.
+
+**Algoritmo: Floyd’s Tortoise and Hare**
+```kotlin
+class Node<T>(var value: T) {
+    var next: Node<T>? = null
+}
+
+fun detectCycle(head: Node<Int>?): Boolean {
+    if (head == null) return false
+
+    var slow = head
+    var fast = head
+
+    while (fast?.next != null) {
+        slow = slow?.next               // Move um passo
+        fast = fast?.next?.next         // Move dois passos
+
+        if (slow == fast) return true   // Ciclo detectado
+    }
+    return false
+}
+
+fun main() {
+    val node1 = Node(1)
+    val node2 = Node(2)
+    val node3 = Node(3)
+    val node4 = Node(4)
+    val node5 = Node(5)
+
+    node1.next = node2
+    node2.next = node3
+    node3.next = node4
+    node4.next = node5
+    node5.next = node2 // Forma um ciclo voltando ao nó 2
+
+    println("A lista tem ciclo? ${detectCycle(node1)}") // Saída: A lista tem ciclo? true
+}
+```
+
+---
+
+#### **4. Reversão de uma Lista Ligada**
+**Problema:** Dada uma lista ligada, reverta a ordem dos seus nós.
+**Exemplo:** Entrada: `1 -> 2 -> 3 -> 4` deve dar saída: `4 -> 3 -> 2 -> 1`.
+
+**Por que usar Linked List?**
+- A reversão de nós pode ser feita com complexidade **O(n)** e sem necessidade de memória extra.
+
+**Algoritmo para Reverter:**
+```kotlin
+fun reverse(head: Node<Int>?): Node<Int>? {
+    var prev: Node<Int>? = null
+    var current = head
+    var next: Node<Int>?
+
+    while (current != null) {
+        next = current.next // Armazena referência ao próximo nó
+        current.next = prev // Inverte o ponteiro
+        prev = current      // Avança os ponteiros
+        current = next
+    }
+    return prev // Novo cabeçalho da lista reversa
+}
+```
+
+---
+
+#### **5. Merge de Duas Listas Ligadas Ordenadas**
+**Problema:** Dadas duas listas ligadas ordenadas, combine-as em uma única lista ligada ordenada.
+
+**Por que usar Linked List?**
+- A combinação de duas listas é feita eficientemente ao manipular os ponteiros diretamente.
+- A lista resultante preserva a ordem sem necessidade de reestruturar memória.
+
+**Algoritmo:**
+```kotlin
+fun mergeLists(l1: Node<Int>?, l2: Node<Int>?): Node<Int>? {
+    if (l1 == null) return l2
+    if (l2 == null) return l1
+
+    if (l1.value < l2.value) {
+        l1.next = mergeLists(l1.next, l2)
+        return l1
+    } else {
+        l2.next = mergeLists(l1, l2.next)
+        return l2
+    }
+}
+```
+
+---
+
+#### **6. Ordenação usando Merge Sort**
+**Problema:** Dada uma lista ligada, ordene os elementos utilizando o algoritmo **Merge Sort**.
+
+**Por que usar Linked List?**
+- O algoritmo divide e conquista é eficiente para **Linked Lists**, evitando overhead de movimentação de memória como em arrays.
+
+---
+
+### **Casos de Uso Reais da Linked List**
+
+1. **Editor de Texto**
+    - **Desfazer/Refazer**: Rastrear ações do usuário. Usar lista ligada para manipular ações anteriores e subsequentes.
+
+2. **Sistema de Alocação de Memória**
+    - Gerenciar blocos de espaço livre e utilizado de forma dinâmica. `Linked Lists` são ideais para armazenar informações sobre alocação de memória fragmentada.
+
+3. **Buffer Circular**
+    - Em sistemas que armazenam dados de forma circular (ex.: gravadores de áudio), uma lista ligada pode ser usada para criar ciclos naturais.
+
+---
+
+### **Vantagens da Linked List**
+
+1. **Inserção e remoção eficientes**:
+    - A complexidade de operações nos extremos da lista é **O(1)**.
+
+2. **Memória dinâmica**:
+    - A lista cresce e reduz de tamanho conforme necessário, sem desperdício.
+
+3. **Flexibilidade na estrutura**:
+    - A manipulação de nós intermediários (ex.: reversões, interseções) é facilitada.
+
+---
+
+### **Desvantagens da Linked List**
+
+1. **Busca lenta**:
+    - Para acessar ou buscar um elemento específico, a complexidade é **O(n)** (precisa explorar os ponteiros em cada nó).
+
+2. **Uso de mais memória**:
+    - Cada nó usa espaço extra para armazenar o ponteiro para o próximo (e anterior, em listas duplamente ligadas).
+
+---
+
+### **Resumo**
+
+#### **Problemas Solucionáveis com Linked Lists**:
+- Detectar e remover ciclos.
+- Reverter a lista.
+- Implementar filas e pilhas.
+- Merge ou ordenação de listas.
+- Controle de memória dinâmica.
+
+#### **Casos Reais**:
+- Desfazer/refazer em editores.
+- Sistemas dinâmicos de memória.
+- Buffers circulares.
+
+A **Linked List** é uma estrutura poderosa e flexível que oferece vantagens em operações dinâmicas e manipulações frequentes de nós!
+
 ### **Conclusão**
 
 Linked List é ideal para aplicações que envolvem frequentes e rápidas inserções/remoções no início ou final da lista. No caso do gerenciamento de filas de processos em um sistema operacional, a Linked List fornece uma solução simples e eficiente que aproveita suas características estruturais.
-
-### **Conclusão**
 
 A Linked List é uma estrutura de dados poderosa e flexível, especialmente útil em cenários onde inserções e remoções frequentes acontecem. No Kotlin, você pode usar a implementação padrão fornecida pela biblioteca Java (`LinkedList`) ou criar sua própria lista para atender a requisitos específicos.
 
