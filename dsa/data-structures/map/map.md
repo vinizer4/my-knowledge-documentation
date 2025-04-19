@@ -3,6 +3,9 @@
 ---
 
 ### **Introdução ao `Map`**
+
+![img.png](img.png)
+
 No Kotlin, um `Map` é uma coleção de pares chave-valor, onde cada chave é única e está associada a exatamente um valor. Essa estrutura é extremamente útil para casos em que precisamos armazenar dados de forma a acessá-los com base em uma "chave" única, como um índice ou identificador.
 
 Kotlin oferece duas principais interfaces de `Map`:

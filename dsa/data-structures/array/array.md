@@ -3,6 +3,9 @@
 ---
 
 #### **Introdução ao Array**
+
+![img.png](img.png)
+
 Arrays são estruturas de dados essenciais que permitem armazenar uma coleção de elementos do mesmo tipo. O número de elementos de um array é fixado no momento de sua criação e não pode ser alterado posteriormente. Em Kotlin, arrays são representados pela classe `Array<T>` ou as diversas variantes específicas para tipos primitivos (como `IntArray`, `DoubleArray`, etc.).
 
 Além disso, os arrays em Kotlin oferecem funcionalidades para acessar, modificar e iterar sobre elementos de maneira eficiente.
